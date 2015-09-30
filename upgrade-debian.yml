@@ -1,0 +1,6 @@
+- hosts: beagle1
+  tasks:
+  - name: update repos
+    apt: upgrade=dist
+  - name: upgrade a server        
+    apt: update_cache=yes
