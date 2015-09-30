@@ -53,3 +53,6 @@ $ ssh root@192.168.7.2
 
 10. Finally, go to your laptop and run ansible-playbook to set up avahi, and hostname
 
+### Extra
+ you want to upgrade your Beagle Debian OS do
+$ ./ansible-playbook -i beagle_host upgrade-debian.yml -vvv
