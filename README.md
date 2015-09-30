@@ -25,8 +25,7 @@ $ export ansible_python_interpreter="/usr/bin/python2"
 ```
 
 ### Requirements, step by step
-0. download Debian image file "Debian (BeagleBone, BeagleBone Black - 4GB SD)"
-http://beagleboard.org/latest-images
+0. download Debian image file "Debian (BeagleBone, BeagleBone Black - 4GB SD)" on [beagleboard.org] (http://beagleboard.org/latest-images)
 
 1. check md5sum and compare with website md5: info
 ```
