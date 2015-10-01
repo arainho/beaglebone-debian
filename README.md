@@ -1,16 +1,9 @@
 # beaglebone-debian
 Install Debian on Beagleboard Black and setup hostname and avahi via ansible
 
-### install requirements on laptop
+### Check requirements on laptop (client)
 ```
 $ apt-get install -y ssh rsync
-```
-
-### run ansible-playbook on laptop
-```
-$ git clone https://github.com/arainho/beaglebone-debian
-$ cd beaglebone-debian
-$ ./ansible-playbook -i beagle_host ansible-avahi.yml -vvv
 ```
 
 ### python3 notes
@@ -24,7 +17,7 @@ If your OS uses python3 do the following
 $ export ansible_python_interpreter="/usr/bin/python2"
 ```
 
-### Requirements, step by step
+### Instructions, step by step
 0. download Debian image file "Debian (BeagleBone, BeagleBone Black - 4GB SD)" on [beagleboard.org] (http://beagleboard.org/latest-images)
 
 1. check md5sum and compare with website md5: info
@@ -68,10 +61,26 @@ $ ssh root@192.168.7.2
 # passwd
 ```
 
-10. Finally, go to your laptop and run ansible-playbook to set up avahi, and hostname
+10. Go to your laptop and install ansible
+[following this installation steps](http://docs.ansible.com/ansible/intro_installation.html#installation)
 
-### Extra
- you want to upgrade your Beagle Debian OS do
+11. After that run ansible-playbook to set up avahi, and hostname ( we choose 'mybeagle' )
+```
+$ git clone https://github.com/arainho/beaglebone-debian
+$ cd beaglebone-debian
+$ ./ansible-playbook -i beagle_host ansible-avahi.yml -vvv
+```
+
+11. Finally, you can connect to your Beagle like this
+on Laptop with Mac OS X, or Linux with [Avahi](http://www.avahi.org/) you can do this
+```
+$ ssh root@mybeagle.local
+```
+on a Laptop with Windows OS you must install [Bonjour Print Services for Windows](https://support.apple.com/kb/DL999?viewlocale=en_US&locale=en_US)
+and after that use [MobaXterm](http://mobaxterm.mobatek.net/) or [Putty](http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html) to connnect to your beagle.
+
+### Additional info
+If you want to upgrade your Beagle Debian OS do
 ```
 $ ./ansible-playbook -i beagle_host upgrade-debian.yml -vvv
 ```
