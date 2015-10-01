@@ -1,5 +1,5 @@
 # beaglebone-debian
-Setup Beagleboard Black hostname and avahi via ansible
+Install Debian on Beagleboard Black and setup hostname and avahi via ansible
 
 ### install requirements on laptop
 ```
