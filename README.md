@@ -51,13 +51,18 @@ $ dhclient enp0s26f7u3
 $ ifconfig | grep 192.168.7.1 -B1 -A1
 ```
 
-8. Connect to BeagleBone
+8. Setup SSH, and BeagleBone date
+( current date of beagle is not correct, correct it otherwise you can have issues getting a ipv4 from dhcp server !! )
+Script removes old host key, copy your public key to beagle and set beagle date.
 ```
-$ ssh root@192.168.7.2
+$ git clone https://github.com/arainho/beaglebone-debian
+$ cd beaglebone-debian
+$ ./setup--ssh-and-date.sh
 ```
 
 9. Change root password
 ```
+$ ssh root@192.168.7.2
 # passwd
 ```
 
@@ -66,12 +71,22 @@ $ ssh root@192.168.7.2
 
 11. After that run ansible-playbook to set up avahi, and hostname ( we choose 'mybeagle' )
 ```
-$ git clone https://github.com/arainho/beaglebone-debian
-$ cd beaglebone-debian
+$ cd beaglebone-debian/playbooks
+```
+
+12. Set variables on ansible playbook and run ansible
+```
+vi ansible-avahi.yml
+
+   my_hostname: 
+   timezone:
+```
+
+```
 $ ./ansible-playbook -i beagle_host ansible-avahi.yml -vvv
 ```
 
-11. Finally, you can connect to your Beagle like this
+13. Finally, you can connect to your Beagle like this
 on Laptop with Mac OS X, or Linux with [Avahi](http://www.avahi.org/) you can do this
 ```
 $ ssh root@mybeagle.local
