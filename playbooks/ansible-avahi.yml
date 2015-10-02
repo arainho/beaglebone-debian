@@ -1,0 +1,79 @@
+- hosts: 192.168.7.2
+  vars:
+      my_hostname: bbb
+      timezone: "Europe/Lisbon"
+
+  tasks:
+
+  - name: "Set timezone"
+    copy: content={{timezone}}
+        dest=/etc/timezone
+        owner=root
+        group=root
+        mode=0644
+
+  - name: "Update timezone"
+    shell:
+        dpkg-reconfigure --frontend noninteractive tzdata
+
+  - name: "Ensure eth0 is enable"
+    lineinfile:
+        dest=/etc/network/interfaces
+        regexp="^#?auto eth0"
+        line="auto eth0"
+        state=present
+
+  - name: "Ensure dhcp runs on eth0"
+    lineinfile:
+        dest=/etc/network/interfaces
+        regexp="^#?iface eth0 inet dhcp"
+        line="iface eth0 inet dhcp"
+        state=present
+
+  - name: "Restart network"
+    service:
+        name=networking.service
+        state=restarted
+
+  - name: "Restart dhclient"
+    shell:
+        killall dhclient && ip addr add 0.0.0.0 dev eth0 && ip link set up eth0 && dhclient eth0
+
+  - name: "Ensure avahi is installed"
+    apt: name={{ item }} state=present
+    with_items:
+      - avahi-daemon
+      - avahi-utils
+      - avahi-dnsconfd
+      - libavahi-core-dev
+    tags:
+      - avahi
+      - pkgs
+
+  - name: "Ensure avahi allow interface is eth0"
+    lineinfile:
+        dest=/etc/avahi/avahi-daemon.conf
+        regexp="^#?allow-interfaces="
+        line="allow-interfaces=eth0" 
+        state=present
+
+  - name: "Ensure avahi deny interface is usb0"
+    lineinfile:
+        dest=/etc/avahi/avahi-daemon.conf
+        regexp="^#?deny-interfaces="
+        line="deny-interfaces=usb0"
+        state=present
+  
+  - name: "Ensure avahi is enabled"
+    service:
+        name=avahi-daemon.service
+        state=started
+        enabled=yes
+
+  - name: "Change beaglebone hostname"
+    hostname: name={{my_hostname}}
+
+  - name: "Restart avahi service"
+    service: 
+        name=avahi-daemon.service
+        state=restarted
